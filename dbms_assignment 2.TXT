@@ -1,0 +1,23 @@
+Tasks:
+
+1.  Find and print the lic_no, make, and model of each vehicle that has more than average daily rental cost of all vehicles.
+
+2.  For the vehicles that have been rented but not yet returned, print the names of customers who have rented them at present.
+
+3.  Show the names and phone numbers of customers who have ever rented a vehicle.  There should be no duplicate records in the output.
+
+4.  Among the customers who have ever rented a vehicle, find out how many of them have Gmail accounts (i.e., "gmail.com") as listed under the "email" attribute of customers table.  Print the number.
+
+5.  Print the names of customers who have never rented a vehicle other than a Ford.
+
+
+
+1. Select lic_no, make, model from Vehicles where cost > (select avg(cost) from Vehicles);
+
+2. Select name from Customers where c_id = (select c_id from Rentals where ret_date IS NULL);
+
+3. Select name, phone from Customers where c_id in (select c_id from Rentals);
+
+4. Select Count(c_id) from Rentals where c_id = (select c_id from Customers where email like '%gmail.com%');
+
+5. Select name from Customers where c_id not in (select c_id from Rentals where v_id in (select id from Vehicles where make in ('H','T','D')));

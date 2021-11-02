@@ -1,0 +1,42 @@
+
+Each task carries 6 points.  You may refer to Oracle notes Part Four for tasks 1-4 and Part Five for task 5.  Make sure your queries work correctly irrespective of the day they are run.
+
+Run your queries in a terminal (for example: PuTTY) instead of on a web browser or a GUI interface.  Create a spool file to capture the output of your queries 1-4.  In case of task 5, show all the records in the view.  Make sure your spool file also includes queries for tasks 1 to 4 and the view definition for task 5.  Name your spool file as your last name.  Submit your spool file via Blackboard.
+
+Please check with me if you need further clarification on any of the following tasks or on the materials on Oracle notes.
+
+Create the view before you create the spool file.  The view creation command should not appear in your output file.  Rather, do the followings to show the view definition.
+  Type the following 'SET' command only once after you log on to oracle.
+     SQL> Set Long n
+            (replace n with an integer that is more than the maximum number of characters in the view definition)
+
+Then use the following 'SELECT' command to display the view definition.  The output of this command must appear in your spool file.
+
+   SQL> Select text from user_views where view_name = '????';
+   Replace ???? with the view name in upper case.  Make sure to use quotes around the view name.
+
+The spool file must show the queries for tasks 1 to 4, their output, the view definition and the records in the view.
+
+Tasks:
+
+1.  Count the number of vehicles rented during each month in 2020.  Then print the month (spelled out completely) and the total number of vehicles rented during that month.  That is, print "January" and total number of vehicles rented in January, and so on.
+
+2.  Show the names of customers who have rented vehicles only on Fridays.
+
+3.  Find names of people who have rented a vehicle within the last 10 days (not counting the day the query is being run) but have not returned the vehicle yet.  Print their names and the string "** To be contacted" next to each name.
+
+4.  For vehicles that were rented in October 2020 and returned in November 2020, print their Lic_no, make, and model.  However, while printing values for the make attribute, print 'Ford' instead of ‘F’, 'Dodge’ instead of ‘D’, ‘Honda’ instead of ‘H’, and ‘Toyota’ instead of ‘T’.
+
+5.  Write a view to calculate the total number of times a vehicle was rented during October.  Your query should consider vehicles that were checked out in October irrespective of when they were returned.  The output must show the Lic_no of each vehicle in the Vehicles table and the number of times it was rented.  If a vehicle was not rented during October, your output should show the Lic_no of the vehicle and the word “None” as the number of times the vehicle was rented
+
+Answers:
+
+1. Select TO_CHAR(ck_out_date, 'Month'),Count(*) From Rentals Where TO_CHAR(ck_out_date, 'YYYY') = '2020' Group By TO_CHAR(ck_out_date, 'Month');
+
+2. Select c.name from Customers c JOIN Rentals r on c.c_id = r.c_id where TO_CHAR(r.ck_out_date, 'Dy') = 'Fri' minus Select c.name from Customers c JOIN Rentals r on c.c_id = r.c_id where TO_CHAR(r.ck_out_date, 'Dy') != 'Fri';
+
+3. Select c.name, '** To be contacted' from Rentals r JOIN Customers c ON c.c_id = r.c_id Where ck_out_date < sysdate-1 and ck_out_date > sysdate-11 and ret_date IS NULL;
+
+4. Select v.lic_no, decode(v.make,'F ','Ford','D ','Dodge','T ','Toyota','H ','Honda') AS make, v.model from Vehicles v JOIN Rentals r ON v.id = r.v_id Where TO_CHAR(r.ck_out_date, 'Mon-YYYY') = 'Oct-2020' and TO_CHAR(r.ret_date, 'Mon-YYYY') = 'Nov-2020';
+
+5. Select lic_no, NVL(to_char(rented#),'None') AS output from Vehicles LEFT JOIN (Select v_id, count(v_id)rented# from Rentals Where TO_CHAR(ck_out_date, 'Mon') = 'Oct' Group by v_id) ON id=v_id;

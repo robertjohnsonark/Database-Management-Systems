@@ -1,0 +1,62 @@
+You may refer to PL/SQL part of my oracle notes to complete this assignment.
+
+Write a PL/SQL procedure to perform the following tasks in order to add a new rental to the rentals table.
+
+(Done)1.  The procedure accepts c_id, v_id, and miles_out values from user.
+
+(Done)2.  Then it performs the following checks:
+    (Done)(a) The c_id must exist in customers table.
+    (Done)(b) The v_id must exist in vehicles table.
+    (Done)(c) The vehicle having the v_id must not have been already checked out by a customer.  That is,
+          anyone who had checked out the vehicle must have returned it.
+
+    If any of the above conditions fail, the procedure prints an appropriate message and quits.
+
+(Done)3.  If all of the above conditions are satisfied, the procedure determines the ck_out_date as the date when the procedure is being run (i.e., current date).
+
+(Done)4.  The procedure then inserts into the rentals table a record having the c_id, v_id, and miles_out values as supplied by the user in step 1, and the ck_out_date value as determined in step 3. The ret_date and miles_in fields remain as null.  The procedure then prints a message indicating successful addition of the record and terminates.
+
+Save the procedure in a file named xxxx.sql, replacing 'xxxx' with your last name.
+
+Generate a spool file showing the procedure code (use the command 'get' followed by the procedure name on SQL prompt to show the code), output for each of the failed cases as mentioned in task 2, and output of a successful record insertion (task 4).  Name the spool file as xxxx.lst, replacing 'xxxx' with your last name.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+ACCEPT user_c_id PROMPT "Enter the c_id value please: ";
+ACCEPT user_v_id PROMPT "Enter the v_id value please: ";
+ACCEPT user_miles_out PROMPT "Enter the miles_out value please: ";
+Declare
+	var_c_id customers.c_id%type;
+	Cursor customer_id is Select c_id from Customers where c_id=&user_c_id;
+	var_v_id vehicles.id%type;
+	Cursor vehicle_id is Select id from Vehicles where id=&user_v_id;
+	var_miles_out rentals.miles_out%type;
+	Cursor vehicle_miles_out is Select miles_out from Rentals where v_id=&user_v_id and ret_date IS NOT NULL;
+	var_ck_out_date rentals.ck_out_date%type;
+Begin
+	Open customer_id;
+	Fetch customer_id into var_c_id;
+	If customer_id%NOTFOUND THEN
+		PRINT "The c_id entered does not exist in the customers table.";
+		EXIT;
+	END If;
+	Close customer_id;
+	Open vehicle_id;
+	Fetch vehicle_id into var_v_id;
+	If vehicle_id%NOTFOUND THEN
+		PRINT "The v_id entered does not exist in the vehicles table.";
+		EXIT;
+	END If;
+	Close vehicle_id;
+	Open vehicle_miles_out;
+	Fetch vehicle_miles_out into var_miles_out;
+	If vehicle_miles_out%NOTFOUND THEN
+		PRINT "The vehicle matched with the v_id entered has been checked out and not returned yet.";
+		EXIT;
+	END If;
+	Close vehicle_miles_out;
+	var_ck_out_date := sysdate;
+	insert into rentals values(var_c_id,var_v_id,var_ck_out_date,&user_miles_out,null,null);
+	commit;
+	PRINT "The record was successfully added to the rentals table.";
+End;

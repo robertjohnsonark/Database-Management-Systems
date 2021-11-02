@@ -1,0 +1,57 @@
+SQL> Select TO_CHAR(ck_out_date, 'Month'),Count(*) From Rentals Where TO_CHAR(ck_out_date, 'YYYY') = '2020' Group By TO_CHAR(ck_out_date, 'Month');
+
+TO_CHAR(CK_OUT_DATE,'MONTH')           COUNT(*)                                 
+------------------------------------ ----------                                 
+December                                      2                                 
+June                                          2                                 
+April                                         1                                 
+November                                      4                                 
+October                                       1                                 
+
+SQL> Select c.name from Customers c JOIN Rentals r on c.c_id = r.c_id where TO_CHAR(r.ck_out_date, 'Dy') = 'Fri' minus Select c.name from Customers c JOIN Rentals r on c.c_id = r.c_id where TO_CHAR(r.ck_out_date, 'Dy') != 'Fri';
+
+NAME                                                                            
+----------                                                                      
+Kate                                                                            
+
+SQL> Select c.name, '** To be contacted' from Rentals r JOIN Customers c ON c.c_id = r.c_id Where ck_out_date < sysdate-1 and ck_out_date > sysdate-11 and ret_date IS NULL;
+
+NAME       '**TOBECONTACTED'                                                    
+---------- ------------------                                                   
+Mary       ** To be contacted                                                   
+Dave       ** To be contacted                                                   
+Robert     ** To be contacted                                                   
+
+SQL> Select v.lic_no, decode(v.make,'F ','Ford','D ','Dodge','T ','Toyota','H ','Honda') AS make, v.model from Vehicles v JOIN Rentals r ON v.id = r.v_id Where TO_CHAR(r.ck_out_date, 'Mon-YYYY') = 'Oct-2020' and TO_CHAR(r.ret_date, 'Mon-YYYY') = 'Nov-2020';
+
+LIC_NO     MAKE   MODEL                                                         
+---------- ------ ----------                                                    
+123        Ford   Mustang                                                       
+
+SQL> Select text from user_views where view_name = 'RENTED_OCTOBER';
+
+TEXT                                                                            
+--------------------------------------------------------------------------------
+Select lic_no, NVL(to_char(rented#),'None') AS output from Vehicles LEFT JOIN (S
+elect v_id, count(v_id)rented# from Rentals Where TO_CHAR(ck_out_date, 'Mon') = 
+'Oct' Group by v_id) ON id=v_id                                                 
+                                                                                
+
+SQL> select * from rented_october;
+
+LIC_NO     OUTPUT                                                               
+---------- ----------------------------------------                             
+123        1                                                                    
+1234567890 1                                                                    
+12345      None                                                                 
+12345678   None                                                                 
+1          None                                                                 
+12         None                                                                 
+123456     None                                                                 
+1234567    None                                                                 
+1234       None                                                                 
+123456789  None                                                                 
+
+10 rows selected.
+
+SQL> spool off

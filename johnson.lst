@@ -1,0 +1,106 @@
+SQL> get johnson.sql
+  1  ACCEPT user_c_id PROMPT "Enter the c_id value please: ";
+  2  ACCEPT user_v_id PROMPT "Enter the v_id value please: ";
+  3  ACCEPT user_miles_out PROMPT "Enter the miles_out value please: ";
+  4  Declare
+  5  	var_c_id customers.c_id%type;
+  6  	Cursor customer_id is Select c_id from Customers where c_id=&user_c_id;
+  7  	var_v_id vehicles.id%type;
+  8  	Cursor vehicle_id is Select id from Vehicles where id=&user_v_id;
+  9  	var_miles_out rentals.miles_out%type;
+ 10  	Cursor vehicle_miles_out is Select miles_out from Rentals where v_id=&user_v_id and ret_date IS NULL;
+ 11  	 no_data_found Exception;
+ 12  Begin
+ 13  	Open customer_id;
+ 14  	Fetch customer_id into var_c_id;
+ 15  		If customer_id%NOTFOUND THEN
+ 16  			dbms_output.put_line ('The c_id entered does not exist in the customers table. ');
+ 17  			Raise no_data_found;
+ 18  		END If;
+ 19  	Close customer_id;
+ 20  	Open vehicle_id;
+ 21  	Fetch vehicle_id into var_v_id;
+ 22  		If vehicle_id%NOTFOUND THEN
+ 23  			dbms_output.put_line ('The v_id entered does not exist in the vehicles table. ');
+ 24  			Raise no_data_found;
+ 25  		END If;
+ 26  	Close vehicle_id;
+ 27  	Open vehicle_miles_out;
+ 28  	Fetch vehicle_miles_out into var_miles_out;
+ 29  		If vehicle_miles_out%FOUND THEN
+ 30  			dbms_output.put_line ('The vehicle trying to be rented has not been returned yet. ');
+ 31  			Raise no_data_found;
+ 32  		END If;
+ 33  	Close vehicle_miles_out;
+ 34  	insert into rentals values(&user_c_id,&user_v_id,to_date(sysdate),&user_miles_out,null,null);
+ 35  	commit;
+ 36  	dbms_output.put_line ('The record was added successfully. ');
+ 37  Exception
+ 38  	When no_data_found then
+ 39  		Rollback;
+ 40* End;
+SQL> @johnson.sql
+Enter the c_id value please: 33
+Enter the v_id value please: 2
+Enter the miles_out value please: 141
+old   3: 	Cursor customer_id is Select c_id from Customers where c_id=&user_c_id;
+new   3: 	Cursor customer_id is Select c_id from Customers where c_id=33;
+old   5: 	Cursor vehicle_id is Select id from Vehicles where id=&user_v_id;
+new   5: 	Cursor vehicle_id is Select id from Vehicles where id=2;
+old   7: 	Cursor vehicle_miles_out is Select miles_out from Rentals where v_id=&user_v_id and ret_date IS NULL;
+new   7: 	Cursor vehicle_miles_out is Select miles_out from Rentals where v_id=2 and ret_date IS NULL;
+old  31: 	insert into rentals values(&user_c_id,&user_v_id,to_date(sysdate),&user_miles_out,null,null);
+new  31: 	insert into rentals values(33,2,to_date(sysdate),141,null,null);
+The c_id entered does not exist in the customers table.                         
+
+PL/SQL procedure successfully completed.
+
+SQL> @johnson.sql
+Enter the c_id value please: 4
+Enter the v_id value please: 112
+Enter the miles_out value please: 452
+old   3: 	Cursor customer_id is Select c_id from Customers where c_id=&user_c_id;
+new   3: 	Cursor customer_id is Select c_id from Customers where c_id=4;
+old   5: 	Cursor vehicle_id is Select id from Vehicles where id=&user_v_id;
+new   5: 	Cursor vehicle_id is Select id from Vehicles where id=112;
+old   7: 	Cursor vehicle_miles_out is Select miles_out from Rentals where v_id=&user_v_id and ret_date IS NULL;
+new   7: 	Cursor vehicle_miles_out is Select miles_out from Rentals where v_id=112 and ret_date IS NULL;
+old  31: 	insert into rentals values(&user_c_id,&user_v_id,to_date(sysdate),&user_miles_out,null,null);
+new  31: 	insert into rentals values(4,112,to_date(sysdate),452,null,null);
+The v_id entered does not exist in the vehicles table.                          
+
+PL/SQL procedure successfully completed.
+
+SQL> @johnson.sql
+Enter the c_id value please: 5
+Enter the v_id value please: 1
+Enter the miles_out value please: 4324
+old   3: 	Cursor customer_id is Select c_id from Customers where c_id=&user_c_id;
+new   3: 	Cursor customer_id is Select c_id from Customers where c_id=5;
+old   5: 	Cursor vehicle_id is Select id from Vehicles where id=&user_v_id;
+new   5: 	Cursor vehicle_id is Select id from Vehicles where id=1;
+old   7: 	Cursor vehicle_miles_out is Select miles_out from Rentals where v_id=&user_v_id and ret_date IS NULL;
+new   7: 	Cursor vehicle_miles_out is Select miles_out from Rentals where v_id=1 and ret_date IS NULL;
+old  31: 	insert into rentals values(&user_c_id,&user_v_id,to_date(sysdate),&user_miles_out,null,null);
+new  31: 	insert into rentals values(5,1,to_date(sysdate),4324,null,null);
+The vehicle trying to be rented has not been returned yet.                      
+
+PL/SQL procedure successfully completed.
+
+SQL> @johnson.sql
+Enter the c_id value please: 4
+Enter the v_id value please: 10
+Enter the miles_out value please: 864
+old   3: 	Cursor customer_id is Select c_id from Customers where c_id=&user_c_id;
+new   3: 	Cursor customer_id is Select c_id from Customers where c_id=4;
+old   5: 	Cursor vehicle_id is Select id from Vehicles where id=&user_v_id;
+new   5: 	Cursor vehicle_id is Select id from Vehicles where id=10;
+old   7: 	Cursor vehicle_miles_out is Select miles_out from Rentals where v_id=&user_v_id and ret_date IS NULL;
+new   7: 	Cursor vehicle_miles_out is Select miles_out from Rentals where v_id=10 and ret_date IS NULL;
+old  31: 	insert into rentals values(&user_c_id,&user_v_id,to_date(sysdate),&user_miles_out,null,null);
+new  31: 	insert into rentals values(4,10,to_date(sysdate),864,null,null);
+The record was added successfully.                                              
+
+PL/SQL procedure successfully completed.
+
+SQL> spool off

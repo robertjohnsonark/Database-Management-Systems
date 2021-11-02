@@ -1,0 +1,26 @@
+Tasks:
+
+1.  For every make of vehicle, print the make, total number of vehicles having that make, and the minimum and maximum rental costs of that make.
+
+2.  For every customer who has ever rented a vehicle, print the customer's name, the make, model, checkout date, and return date.  If a customer has rented multiple times, there should be a row for each of his/her rental.
+
+3.  For each Honda that was ever rented, print the lic_no, model, checkout date, and total miles driven during that rental period. The output must appear in descending order of checkout date.
+
+4.  For every vehicle, find the number of times it was rented.  The output should show the lic_no and the rental count. If a vehicle was never rented, the lic_no should be there in the output; but the count value should be absent.
+
+5.  Print the names of customers who have always rented the vehicle having the highest per day rental cost.
+
+I just wanted to repeat what I had mentioned in class on Thursday regarding tasks 3 and 5.  In case of task 3, consider only the vehicles that have been rented and returned.  In case of task 5, assume there is exactly one vehicle in the database having the highest per day rental cost.
+
+
+
+
+1. Select Make, Count(make), Min(cost), Max(cost) from Vehicles Group By Make;
+
+2. Select c.name, v.make, v.model, r.ck_out_date, r.ret_date from Rentals r JOIN Customers c ON c.c_id = r.c_id JOIN Vehicles v ON v.id = r.v_id Order by c.name;
+
+3. Select v.lic_no, v.model, r.ck_out_date, r.miles_in-r.miles_out from Vehicles v JOIN Rentals r ON r.v_id = v.id where r.miles_in IS NOT NULL and v.make='H' Order By r.ck_out_date desc;
+
+4. Select lic_no, rented# from Vehicles LEFT JOIN (Select v_id, count(v_id)rented# from Rentals Group by v_id) ON id=v_id;
+
+5. Select name from Customers c JOIN Rentals r on c.c_id = r.c_id JOIN Vehicles v ON v.id = r.v_id where v.cost = (select max(cost) from Vehicles) minus Select name from Customers c JOIN Rentals r on c.c_id = r.c_id JOIN Vehicles v ON v.id = r.v_id where v.cost != (select max(cost) from Vehicles);

@@ -1,0 +1,46 @@
+SQL> Select lic_no, make, model from Vehicles where cost > (select avg(cost) from Vehicles);
+
+LIC_NO     MA MODEL                                                             
+---------- -- ----------                                                        
+123        F  Mustang                                                           
+1234       D  Charger                                                           
+12345      D  Challenger                                                        
+1234567    H  Civic                                                             
+1234567890 T  Prius                                                             
+
+SQL> Select name from Customers where c_id = (select c_id from Rentals where ret_date IS NULL);
+
+no rows selected
+
+SQL> Select name, phone from Customers where c_id in (select c_id from Rentals);
+
+NAME       PHONE                                                                
+---------- ---------                                                            
+John       424-2525                                                             
+James      352-5235                                                             
+Robert     543-3721                                                             
+Mike       346-4578                                                             
+Dave       462-3452                                                             
+Susan      847-5234                                                             
+Mary       234-7278                                                             
+Linda      188-5522                                                             
+Lisa       125-9582                                                             
+Karen      599-4185                                                             
+
+10 rows selected.
+
+SQL> Select Count(c_id) from Rentals where c_id = (select c_id from Customers where email like '%gmail.com%');
+
+COUNT(C_ID)                                                                     
+-----------                                                                     
+          0                                                                     
+
+SQL> Select name from Customers where c_id not in (select c_id from Rentals where v_id in (select id from Vehicles where make in ('H','T','D')));
+
+NAME                                                                            
+----------                                                                      
+Linda                                                                           
+John                                                                            
+Mike                                                                            
+
+SQL> spool off

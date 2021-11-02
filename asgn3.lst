@@ -1,0 +1,64 @@
+SQL> Select Make, Count(make), Min(cost), Max(cost) from Vehicles Group By Make;
+
+MA COUNT(MAKE)  MIN(COST)  MAX(COST)                                            
+-- ----------- ---------- ----------                                            
+T            2    3536.65    9955.76                                            
+D            3    5422.26    9343.55                                            
+H            2    1498.11    8224.33                                            
+F            3    2444.24    6893.17                                            
+
+SQL> Select c.name, v.make, v.model, r.ck_out_date, r.ret_date from Rentals r JOIN Customers c ON c.c_id = r.c_id JOIN Vehicles v ON v.id = r.v_id Order by c.name;
+
+NAME       MA MODEL      CK_OUT_DA RET_DATE                                     
+---------- -- ---------- --------- ---------                                    
+Caleb      T  Prius      16-MAR-17 21-MAR-17                                    
+Dave       D  Charger    22-JUL-16                                              
+Dave       H  Civic      08-JAN-19 11-JAN-19                                    
+James      D  Charger    12-MAR-17 22-MAR-17                                    
+John       F  Mustang    02-NOV-19 05-NOV-19                                    
+Karen      H  Accord     26-JUL-16 27-JUL-16                                    
+Linda      F  Focus      03-SEP-18 06-SEP-18                                    
+Lisa       D  Journey    22-DEC-20 26-DEC-20                                    
+Mary       H  Civic      14-JUN-20 17-JUN-20                                    
+Mike       F  F-150      11-FEB-17 12-FEB-17                                    
+Robert     T  Prius      17-OCT-17 25-OCT-17                                    
+
+NAME       MA MODEL      CK_OUT_DA RET_DATE                                     
+---------- -- ---------- --------- ---------                                    
+Robert     F  Focus      25-NOV-18 05-DEC-18                                    
+Susan      T  Camry      04-NOV-19 06-NOV-19                                    
+
+13 rows selected.
+
+SQL> Select v.lic_no, v.model, r.ck_out_date, r.miles_in-r.miles_out from Vehicles v JOIN Rentals r ON r.v_id = v.id where r.miles_in IS NOT NULL and v.make='H' Order By r.ck_out_date desc;
+
+LIC_NO     MODEL      CK_OUT_DA R.MILES_IN-R.MILES_OUT                          
+---------- ---------- --------- ----------------------                          
+1234567    Civic      14-JUN-20                    542                          
+1234567    Civic      08-JAN-19                    222                          
+12345678   Accord     26-JUL-16                    139                          
+
+SQL> Select lic_no, rented# from Vehicles LEFT JOIN (Select v_id, count(v_id)rented# from Rentals Group by v_id) ON id=v_id;
+
+LIC_NO        RENTED#                                                           
+---------- ----------                                                           
+1                   1                                                           
+123456              1                                                           
+12                  2                                                           
+1234                2                                                           
+12345678            1                                                           
+123                 1                                                           
+1234567             2                                                           
+1234567890          2                                                           
+123456789           1                                                           
+12345                                                                           
+
+10 rows selected.
+
+SQL> Select name from Customers c JOIN Rentals r on c.c_id = r.c_id JOIN Vehicles v ON v.id = r.v_id where v.cost = (select max(cost) from Vehicles) minus Select name from Customers c JOIN Rentals r on c.c_id = r.c_id JOIN Vehicles v ON v.id = r.v_id where v.cost != (select max(cost) from Vehicles);
+
+NAME                                                                            
+----------                                                                      
+Caleb                                                                           
+
+SQL> spool off

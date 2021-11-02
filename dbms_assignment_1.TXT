@@ -1,0 +1,33 @@
+insert into vehicles values(1,1,'1','F','F-150',2016,'black',2444.24);
+insert into vehicles values(2,2,'12','F','Focus',2017,'yellow',5374.56);
+insert into vehicles values(3,3,'123','F','Mustang',2018,'blue',6893.17);
+insert into vehicles values(4,4,'1234','D','Charger',2015,'red',7992.54);
+insert into vehicles values(5,5,'12345','D','Challenger',2020,'red',9343.55);
+insert into vehicles values(6,6,'123456','D','Journey',2019,'white',5422.26);
+insert into vehicles values(7,7,'1234567','H','Civic',2017,'white',8224.33);
+insert into vehicles values(8,8,'12345678','H','Accord',2016,'blue',1498.11);
+insert into vehicles values(9,9,'123456789','T','Camry',2018,'orange',3536.65);
+insert into vehicles values(10,10,'1234567890','T','Prius',2020,'red',9955.76);
+
+insert into customers values(1,'John','424-2525','John@yahoo.com');
+insert into customers values(2,'James','352-5235','James@yahoo.com');
+insert into customers values(3,'Robert','543-3721','Robert@mail.com');
+insert into customers values(4,'Mike','346-4578','Mike@aol.com');
+insert into customers values(5,'Dave','462-3452','Dave@yahoo.com');
+insert into customers values(6,'Susan','847-5234','Susan@yahoo.com');
+insert into customers values(7,'Mary','234-7278','Mary@yahoo.com');
+insert into customers values(8,'Linda','188-5522','Linda@mail.com');
+insert into customers values(9,'Lisa','125-9582','Lisa@aol.com');
+insert into customers values(10,'Karen','599-4185','Karen@mail.com');
+
+insert into rentals values(1,3,'02-NOV-2019',456,'05-NOV-2019',664);
+insert into rentals values(2,4,'12-MAR-2017',1111,'22-MAR-2017',1333);
+insert into rentals values(3,2,'25-NOV-2018',555,'05-DEC-2018',777);
+insert into rentals values(4,1,'11-FEB-2017',2000,'12-FEB-2017',2100);
+insert into rentals values(5,7,'08-JAN-2019',444,'11-JAN-2019',666);
+insert into rentals values(6,9,'04-NOV-2019',456,'06-NOV-2019',664);
+insert into rentals values(7,7,'14-JUN-2020',1245,'17-JUN-2020',1787);
+insert into rentals values(8,2,'03-SEP-2018',5535,'06-SEP-2018',5942);
+insert into rentals values(9,6,'22-DEC-2020',4555,'26-DEC-2020',4674);
+insert into rentals values(10,8,'26-JUL-2016',214,'27-JUL-2016',353);
+
